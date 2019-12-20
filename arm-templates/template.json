@@ -1,0 +1,61 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "prefix": {
+        "type": "string",
+        "maxLength": 48
+      },
+      "anomalyDetectorLocation": {
+        "type": "string",
+        "allowedValues": [
+          "australiaeast",
+          "southeastasia",
+          "eastasia",
+          "eastus",
+          "eastus2",
+          "centralus",
+          "southcentralus",
+          "westus2",
+          "canadacentral",
+          "uksouth",
+          "westeurope",
+          "northeurope"
+        ]
+      },
+      "anomalyDetectorSku": {
+        "type": "string",
+        "defaultValue": "F0",
+        "allowedValues": [
+          "F0",
+          "S0"
+        ]
+      }
+    },
+    "variables": {
+      "anomalyDetectorName": "[concat(parameters('prefix'), '-anomalydetector')]"
+    },
+    "resources": [
+      {
+        "name": "[variables('anomalyDetectorName')]",
+        "type": "Microsoft.CognitiveServices/accounts",
+        "apiVersion": "2017-04-18",
+        "sku": {
+          "name": "[parameters('anomalyDetectorSku')]"
+        },
+        "kind": "AnomalyDetector",
+        "location": "[parameters('anomalyDetectorLocation')]",
+        "properties": {}
+      }
+    ],
+    "outputs": {
+      "anomalyDetectorEndpoint": {
+        "type": "string",
+        "value": "[reference(resourceId('Microsoft.CognitiveServices/accounts', variables('anomalyDetectorName'))).endpoint]"
+      },
+      "anomalyDetectorKey": {
+        "type": "string",
+        "value": "[listKeys(resourceId('Microsoft.CognitiveServices/accounts', variables('anomalyDetectorName')), '2017-04-18').key1]"
+      }
+    }
+}
