@@ -17,7 +17,7 @@ az group deployment validate `
   --parameters `
       prefix=$PREFIX
 
-az group deployment create `
+$deploymentResult=az group deployment create `
   --resource-group $RESOURCE_GROUP `
   --template-file .\arm-templates\template.json `
   --handle-extended-json-format `
@@ -25,9 +25,12 @@ az group deployment create `
   --parameters .\arm-templates\parameters.json `
   --parameters `
       prefix=$PREFIX
+
+# Show result
+$deploymentResult
 ```
 
-The last command shows outputs like below.
+The `$deploymentResult` shows outputs of the deployment like below.
 
 ```json
 {
@@ -40,4 +43,12 @@ The last command shows outputs like below.
     "value": "<Your anomaly detector's primary key>"
   }
 }
+```
+
+Set environment variables to run demo of Anomaly Detector locally.
+
+```ps1
+$deploymentResult = $deploymentResult | ConvertFrom-Json
+$env:ANOMALY_DETECTOR_KEY=$deploymentResult.anomalyDetectorKey.value
+$env:ANOMALY_DETECTOR_ENDPOINT=$deploymentResult.anomalyDetectorEndpoint.value
 ```
