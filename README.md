@@ -49,6 +49,6 @@ Set environment variables to run demo of Anomaly Detector locally.
 
 ```ps1
 $deploymentResult = $deploymentResult | ConvertFrom-Json
-$env:ANOMALY_DETECTOR_KEY=$deploymentResult.anomalyDetectorKey.value
-$env:ANOMALY_DETECTOR_ENDPOINT=$deploymentResult.anomalyDetectorEndpoint.value
+$env:VUE_APP_ANOMALY_DETECTOR_KEY=$deploymentResult.anomalyDetectorKey.value
+$env:VUE_APP_ANOMALY_DETECTOR_ENDPOINT=$deploymentResult.anomalyDetectorEndpoint.value
 ```
