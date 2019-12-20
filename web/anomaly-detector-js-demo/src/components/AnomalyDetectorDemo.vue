@@ -1,8 +1,15 @@
 <template>
   <div>
-    <div>
-      <code class="result">
-        {{ result }}
+    <div class="result">
+      <h3 class="status">Status</h3>
+      <div class="status">{{ status }}</div>
+      <h3 class="raw-result">Raw result</h3>
+      <code class="raw-result">
+        {{ rawResult }}
+      </code>
+      <h3 class="sammary">Sammary</h3>
+      <code class="sammary">
+        {{ sammary }}
       </code>
     </div>
     <button v-on:click="detectAnomaly">Detect anomaly</button>
@@ -18,7 +25,9 @@ import axios from 'axios'
 export default {
   data: function () {
     return {
-      result: 'Not detected yet.'
+      status: 'Not detected yet.',
+      rawResult: null,
+      sammary: null
     }
   },
   methods: {
@@ -33,7 +42,7 @@ export default {
       return points
     },
     detectAnomaly: async function () {
-      this.result = 'detecting...'
+      this.status = 'Detecting...'
       const points = await this.fetchData()
 
       const endpoint = process.env.VUE_APP_ANOMALY_DETECTOR_ENDPOINT
@@ -42,8 +51,15 @@ export default {
       const anomalyDetectorClient = new AnomalyDetector.AnomalyDetectorClient(credentials, endpoint)
       const body = { series: points, granularity: 'daily' }
       const result = await anomalyDetectorClient.entireDetect(body)
+
       console.log(result)
-      this.result = JSON.stringify(result)
+
+      const sammary = {
+        anomalyNumber: result.isAnomaly.filter((e) => e).length
+      }
+      this.status = 'Detected!'
+      this.rawResult = JSON.stringify(result)
+      this.sammary = sammary
     }
   }
 }
